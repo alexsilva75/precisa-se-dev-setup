@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: ./php
+    volumes:
+      - ./curso-symfony:/var/www/html
+    ports:
+      - "8000:8000"
+    command: symfony server:start --no-tls
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:14.5
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./postgres/.env.postgres
+    volumes:
+      - /c/docker/volumes/symfony/postgres/data:/var/lib/postgresql/data:rw
+
+  symfony:
+    build:
+      context: ./symfony
+    volumes:
+      - ./curso-symfony:/var/www/html
+  composer:
+    build:
+      context: ./composer
+    volumes:
+      - ./curso-symfony:/var/www/html
