@@ -1,6 +1,8 @@
-FROM php:8-alpine
+FROM php:8.1-fpm
+#RUN export SHELL=/bin/bash
 
-RUN apk add git
+RUN apt-get update && apt-get install -y git zlib1g-dev libicu-dev g++ libzip-dev\
+    libpq-dev && docker-php-ext-configure intl && docker-php-ext-install pdo pdo_pgsql intl zip sockets 
 RUN git config --global user.email "alexsandro.silva@mail.com"
 RUN git config --global user.name "Alex Silva"
 
@@ -10,9 +12,10 @@ RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
 
-RUN apk add --no-cache bash
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
-RUN apk add symfony-cli
+#RUN apk add --no-cache bash
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
+RUN apt-get install symfony-cli 
+
 
 WORKDIR /var/www/html
 
